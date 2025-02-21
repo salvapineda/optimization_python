@@ -381,7 +381,7 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <p><a href="https://colab.research.google.com/github/salvapineda/notebooks/blob/main/OptimizationExample.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a></p>
+  <p><a href="https://colab.research.google.com/github/salvapineda/optimization_python/blob/main/optimization_example.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a></p>
 <section class="tex2jax_ignore mathjax_ignore" id="optimization-example">
 <h1>Optimization example<a class="headerlink" href="#optimization-example" title="Permalink to this heading">#</a></h1>
 <p>We want to maximize the energy production benefits of running 2 generators. The benefit of producing with generator 1 and 2 are 3€/MWh and 5€/MWh, respectively. The maximum capacity of generator 1 and 2 are 4MW and 6MW, respectively. Both generators share the same water cooling system. Generator 1 needs 3 units of water per MW, while generator 2 needs 2 units of water per MW. The maximum units of water available is 18.</p>
@@ -423,23 +423,34 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>^C
-<span class=" -Color -Color-Red">ERROR: Operation cancelled by user</span>
-</pre></div>
-</div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Note: you may need to restart the kernel to use updated packages.
 </pre></div>
 </div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">3</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="c1"># Requirements</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="n">get_ipython</span><span class="p">()</span><span class="o">.</span><span class="n">run_line_magic</span><span class="p">(</span><span class="s1">&#39;pip&#39;</span><span class="p">,</span> <span class="s1">&#39;install -q pulp&#39;</span><span class="p">)</span>
-<span class="ne">----&gt; </span><span class="mi">3</span> <span class="kn">from</span><span class="w"> </span><span class="nn">pulp</span><span class="w"> </span><span class="kn">import</span> <span class="n">LpMaximize</span><span class="p">,</span> <span class="n">LpProblem</span><span class="p">,</span> <span class="n">LpVariable</span><span class="p">,</span> <span class="n">lpSum</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="c1"># Model</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="n">model</span> <span class="o">=</span> <span class="n">LpProblem</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;small-problem&#39;</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">LpMaximize</span><span class="p">)</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Welcome to the CBC MILP Solver 
+Version: 2.10.3 
+Build Date: Dec 15 2019 
 
-<span class="ne">ModuleNotFoundError</span>: No module named &#39;pulp&#39;
+command line - /home/salva/.local/lib/python3.8/site-packages/pulp/solverdir/cbc/linux/64/cbc /tmp/e725c77529a84cf2a042b07d3f2d311d-pulp.mps -max -timeMode elapsed -branch -printingOptions all -solution /tmp/e725c77529a84cf2a042b07d3f2d311d-pulp.sol (default strategy 1)
+At line 2 NAME          MODEL
+At line 3 ROWS
+At line 6 COLUMNS
+At line 11 RHS
+At line 13 BOUNDS
+At line 16 ENDATA
+Problem MODEL has 1 rows, 2 columns and 2 elements
+Coin0008I MODEL read with 0 errors
+Option for timeMode changed from cpu to elapsed
+Presolve 1 (0) rows, 2 (0) columns and 2 (0) elements
+0  Obj -0 Dual inf 10.5 (2)
+1  Obj 36
+Optimal - objective value 36
+Optimal objective 36 - 1 iterations time 0.002
+Option for printingOptions changed from normal to all
+Total time (CPU seconds):       0.00   (Wallclock seconds):       0.00
+
+x1 = 2.0
+x2 = 6.0
+Optimal value = 36.0
 </pre></div>
 </div>
 </div>
@@ -472,6 +483,16 @@ document.write(`
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Note: you may need to restart the kernel to use updated packages.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>x1 = 2.0
+x2 = 6.0
+Optimal value = 36.0
+</pre></div>
+</div>
+</div>
 </div>
 </section>
 <section id="pyomo-glpk-link">
@@ -500,6 +521,67 @@ document.write(`
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;x2 =&#39;</span><span class="p">,</span><span class="n">m</span><span class="o">.</span><span class="n">x2</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Optimal value =&#39;</span><span class="p">,</span><span class="n">m</span><span class="o">.</span><span class="n">obj</span><span class="p">())</span>
 <span class="c1"># Explanation: This section demonstrates how to solve the optimization problem using Pyomo and GLPK.</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Note: you may need to restart the kernel to use updated packages.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Red">ERROR: Could not find a version that satisfies the requirement glpk-utils (from versions: none)</span>
+<span class=" -Color -Color-Red">ERROR: No matching distribution found for glpk-utils</span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Note: you may need to restart the kernel to use updated packages.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: Failed to create solver with name &#39;_glpk_shell&#39;: Failed to set
+    executable for solver glpk. File with name=/usr/bin/glpsol either does not
+    exist or it is not executable. To skip this validation, call
+    set_executable with validate=False.
+</pre></div>
+</div>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">RuntimeError</span><span class="g g-Whitespace">                              </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">line</span> <span class="mi">16</span>
+<span class="g g-Whitespace">     </span><span class="mi">14</span> <span class="n">m</span><span class="o">.</span><span class="n">con</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Constraint</span><span class="p">(</span><span class="n">expr</span> <span class="o">=</span> <span class="mi">3</span><span class="o">*</span><span class="n">m</span><span class="o">.</span><span class="n">x1</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">m</span><span class="o">.</span><span class="n">x2</span> <span class="o">&lt;=</span> <span class="mi">18</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">15</span> <span class="c1"># Solve problem using GLPK solver</span>
+<span class="ne">---&gt; </span><span class="mi">16</span> <span class="n">glpk</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">m</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
+<span class="g g-Whitespace">     </span><span class="mi">17</span> <span class="c1"># Print results</span>
+<span class="g g-Whitespace">     </span><span class="mi">18</span> <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;x1 =&#39;</span><span class="p">,</span><span class="n">m</span><span class="o">.</span><span class="n">x1</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+<span class="nn">File ~/.local/lib/python3.8/site-packages/pyomo/opt/base/solvers.py:110,</span> in <span class="ni">UnknownSolver.solve</span><span class="nt">(self, *args, **kwds)</span>
+<span class="g g-Whitespace">    </span><span class="mi">108</span> <span class="k">def</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+<span class="g g-Whitespace">    </span><span class="mi">109</span><span class="w">     </span><span class="sd">&quot;&quot;&quot;Perform optimization and return an SolverResults object.&quot;&quot;&quot;</span>
+<span class="ne">--&gt; </span><span class="mi">110</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_solver_error</span><span class="p">(</span><span class="s1">&#39;solve&#39;</span><span class="p">)</span>
+
+<span class="nn">File ~/.local/lib/python3.8/site-packages/pyomo/opt/base/solvers.py:127,</span> in <span class="ni">UnknownSolver._solver_error</span><span class="nt">(self, method_name)</span>
+<span class="g g-Whitespace">    </span><span class="mi">126</span>     <span class="k">def</span><span class="w"> </span><span class="nf">_solver_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method_name</span><span class="p">):</span>
+<span class="ne">--&gt; </span><span class="mi">127</span>         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;Attempting to use an unavailable solver.</span>
+<span class="g g-Whitespace">    </span><span class="mi">128</span><span class="s2"> </span>
+<span class="g g-Whitespace">    </span><span class="mi">129</span><span class="s2"> The SolverFactory was unable to create the solver &quot;</span><span class="si">%s</span><span class="s2">&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">130</span><span class="s2"> and returned an UnknownSolver object.  This error is raised at the point</span>
+<span class="g g-Whitespace">    </span><span class="mi">131</span><span class="s2"> where the UnknownSolver object was used as if it were valid (by calling</span>
+<span class="g g-Whitespace">    </span><span class="mi">132</span><span class="s2"> method &quot;</span><span class="si">%s</span><span class="s2">&quot;).</span>
+<span class="g g-Whitespace">    </span><span class="mi">133</span><span class="s2"> </span>
+<span class="g g-Whitespace">    </span><span class="mi">134</span><span class="s2"> The original solver was created with the following parameters:</span>
+<span class="g g-Whitespace">    </span><span class="mi">135</span><span class="s2"> </span><span class="se">\t</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">method_name</span> <span class="p">)</span>
+<span class="nn">    136 + &quot;\n\t&quot;.join(&quot;%s: %s&quot; % i for i</span> in <span class="ni">sorted(self._kwds.items</span><span class="nt">()))</span>
+<span class="g g-Whitespace">    </span><span class="mi">137</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\t</span><span class="s2">_args: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="p">,</span> <span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">138</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\t</span><span class="s2">options: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+
+<span class="ne">RuntimeError</span>: Attempting to use an unavailable solver.
+
+<span class="n">The</span> <span class="n">SolverFactory</span> <span class="n">was</span> <span class="n">unable</span> <span class="n">to</span> <span class="n">create</span> <span class="n">the</span> <span class="n">solver</span> <span class="s2">&quot;_glpk_shell&quot;</span>
+<span class="ow">and</span> <span class="n">returned</span> <span class="n">an</span> <span class="n">UnknownSolver</span> <span class="nb">object</span><span class="o">.</span>  <span class="n">This</span> <span class="n">error</span> <span class="ow">is</span> <span class="n">raised</span> <span class="n">at</span> <span class="n">the</span> <span class="n">point</span>
+<span class="n">where</span> <span class="n">the</span> <span class="n">UnknownSolver</span> <span class="nb">object</span> <span class="n">was</span> <span class="n">used</span> <span class="k">as</span> <span class="k">if</span> <span class="n">it</span> <span class="n">were</span> <span class="n">valid</span> <span class="p">(</span><span class="n">by</span> <span class="n">calling</span>
+<span class="n">method</span> <span class="s2">&quot;solve&quot;</span><span class="p">)</span><span class="o">.</span>
+
+<span class="n">The</span> <span class="n">original</span> <span class="n">solver</span> <span class="n">was</span> <span class="n">created</span> <span class="k">with</span> <span class="n">the</span> <span class="n">following</span> <span class="n">parameters</span><span class="p">:</span>
+	<span class="n">executable</span><span class="p">:</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">glpsol</span>
+	<span class="nb">type</span><span class="p">:</span> <span class="n">_glpk_shell</span>
+	<span class="n">_args</span><span class="p">:</span> <span class="p">()</span>
+	<span class="n">options</span><span class="p">:</span> <span class="p">{}</span>
 </pre></div>
 </div>
 </div>
