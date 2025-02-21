@@ -166,10 +166,11 @@ const thebe_selector_output = ".output, .cell_output"
                 </a>
             </li>
         </ul>
-        <ul class="nav bd-sidenav">
+        <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="markdown.html">Markdown Files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="notebooks.html">Content with notebooks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="markdown-notebooks.html">Notebooks with MyST Markdown</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Optimization example</a></li>
 </ul>
 
     </div>
@@ -365,6 +366,8 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pulp-link">PULP (link)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy-link">SCIPY (link)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyomo-glpk-link">PYOMO + GLPK (link)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gurobipy-link">GUROBIPY (link)</a></li>
 </ul>
@@ -378,7 +381,7 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <p><a href="https://colab.research.google.com/github/salvapineda/notebooks/blob/main/OptimizationExample.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a></p>
+  <p><a href="https://colab.research.google.com/github/salvapineda/optimization_python/blob/main/optimization_example.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a></p>
 <section class="tex2jax_ignore mathjax_ignore" id="optimization-example">
 <h1>Optimization example<a class="headerlink" href="#optimization-example" title="Permalink to this heading">#</a></h1>
 <p>We want to maximize the energy production benefits of running 2 generators. The benefit of producing with generator 1 and 2 are 3€/MWh and 5€/MWh, respectively. The maximum capacity of generator 1 and 2 are 4MW and 6MW, respectively. Both generators share the same water cooling system. Generator 1 needs 3 units of water per MW, while generator 2 needs 2 units of water per MW. The maximum units of water available is 18.</p>
@@ -392,14 +395,115 @@ document.write(`
 &amp; 3x_1 + 2x_2 \leq 18
 \end{align}
 \end{split}\]</div>
-<section id="pyomo-glpk-link">
-<h2>PYOMO + GLPK (<a class="reference external" href="https://pyomo.readthedocs.io/en/stable/">link</a>)<a class="headerlink" href="#pyomo-glpk-link" title="Permalink to this heading">#</a></h2>
+<section id="pulp-link">
+<h2>PULP (<a class="reference external" href="https://coin-or.github.io/pulp/">link</a>)<a class="headerlink" href="#pulp-link" title="Permalink to this heading">#</a></h2>
+<p>PuLP is a user-friendly library for linear programming. It is easy to learn and integrates well with other Python libraries.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Requirements</span>
-<span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>-q<span class="w"> </span>pyomo
+<span class="o">%</span><span class="k">pip</span> install -q pulp
+<span class="kn">from</span><span class="w"> </span><span class="nn">pulp</span><span class="w"> </span><span class="kn">import</span> <span class="n">LpMaximize</span><span class="p">,</span> <span class="n">LpProblem</span><span class="p">,</span> <span class="n">LpVariable</span><span class="p">,</span> <span class="n">lpSum</span>
+<span class="c1"># Model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">LpProblem</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;small-problem&#39;</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">LpMaximize</span><span class="p">)</span>
+<span class="c1"># Variables</span>
+<span class="n">x1</span> <span class="o">=</span> <span class="n">LpVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;x1&#39;</span><span class="p">,</span> <span class="n">lowBound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">upBound</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">x2</span> <span class="o">=</span> <span class="n">LpVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;x2&#39;</span><span class="p">,</span> <span class="n">lowBound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">upBound</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+<span class="c1"># Objective function</span>
+<span class="n">model</span> <span class="o">+=</span> <span class="n">lpSum</span><span class="p">([</span><span class="mi">3</span> <span class="o">*</span> <span class="n">x1</span><span class="p">,</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">x2</span><span class="p">])</span>
+<span class="c1"># Constraints</span>
+<span class="n">model</span> <span class="o">+=</span> <span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">x1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x2</span> <span class="o">&lt;=</span> <span class="mi">18</span><span class="p">,</span> <span class="s1">&#39;water_constraint&#39;</span><span class="p">)</span>
+<span class="c1"># Solve the problem</span>
+<span class="n">model</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+<span class="c1"># Print results</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;x1 =&#39;</span><span class="p">,</span> <span class="n">x1</span><span class="o">.</span><span class="n">varValue</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;x2 =&#39;</span><span class="p">,</span> <span class="n">x2</span><span class="o">.</span><span class="n">varValue</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Optimal value =&#39;</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">objective</span><span class="o">.</span><span class="n">value</span><span class="p">())</span>
+<span class="c1"># Explanation: This section demonstrates how to solve the optimization problem using PuLP.</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Note: you may need to restart the kernel to use updated packages.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Welcome to the CBC MILP Solver 
+Version: 2.10.3 
+Build Date: Dec 15 2019 
+
+command line - /home/salva/.local/lib/python3.8/site-packages/pulp/solverdir/cbc/linux/64/cbc /tmp/e725c77529a84cf2a042b07d3f2d311d-pulp.mps -max -timeMode elapsed -branch -printingOptions all -solution /tmp/e725c77529a84cf2a042b07d3f2d311d-pulp.sol (default strategy 1)
+At line 2 NAME          MODEL
+At line 3 ROWS
+At line 6 COLUMNS
+At line 11 RHS
+At line 13 BOUNDS
+At line 16 ENDATA
+Problem MODEL has 1 rows, 2 columns and 2 elements
+Coin0008I MODEL read with 0 errors
+Option for timeMode changed from cpu to elapsed
+Presolve 1 (0) rows, 2 (0) columns and 2 (0) elements
+0  Obj -0 Dual inf 10.5 (2)
+1  Obj 36
+Optimal - objective value 36
+Optimal objective 36 - 1 iterations time 0.002
+Option for printingOptions changed from normal to all
+Total time (CPU seconds):       0.00   (Wallclock seconds):       0.00
+
+x1 = 2.0
+x2 = 6.0
+Optimal value = 36.0
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="scipy-link">
+<h2>SCIPY (<a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.linprog.html">link</a>)<a class="headerlink" href="#scipy-link" title="Permalink to this heading">#</a></h2>
+<p>Scipy is a general-purpose library for scientific computing. It includes a simple linear programming solver that is easy to use for small to medium-sized problems.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Requirements</span>
+<span class="o">%</span><span class="k">pip</span> install -q scipy
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">linprog</span>
+<span class="c1"># Coefficients of the objective function</span>
+<span class="n">c</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">]</span>  <span class="c1"># Note: linprog does minimization by default</span>
+<span class="c1"># Coefficients of the inequality constraints</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]]</span>
+<span class="c1"># Right-hand side of the inequality constraints</span>
+<span class="n">b</span> <span class="o">=</span> <span class="p">[</span><span class="mi">18</span><span class="p">]</span>
+<span class="c1"># Bounds for the variables</span>
+<span class="n">x0_bounds</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">x1_bounds</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+<span class="c1"># Solve the problem</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">linprog</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">A_ub</span><span class="o">=</span><span class="n">A</span><span class="p">,</span> <span class="n">b_ub</span><span class="o">=</span><span class="n">b</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">[</span><span class="n">x0_bounds</span><span class="p">,</span> <span class="n">x1_bounds</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;highs&#39;</span><span class="p">)</span>
+<span class="c1"># Print results</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;x1 =&#39;</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;x2 =&#39;</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Optimal value =&#39;</span><span class="p">,</span> <span class="o">-</span><span class="n">res</span><span class="o">.</span><span class="n">fun</span><span class="p">)</span>  <span class="c1"># Negate because we minimized</span>
+<span class="c1"># Explanation: This section demonstrates how to solve the optimization problem using Scipy.</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Note: you may need to restart the kernel to use updated packages.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>x1 = 2.0
+x2 = 6.0
+Optimal value = 36.0
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="pyomo-glpk-link">
+<h2>PYOMO + GLPK (<a class="reference external" href="https://pyomo.readthedocs.io/en/stable/">link</a>)<a class="headerlink" href="#pyomo-glpk-link" title="Permalink to this heading">#</a></h2>
+<p>Pyomo is a versatile library that can handle a wide range of optimization problems. It is particularly useful for complex models and supports various solvers.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Requirements</span>
+<span class="o">%</span><span class="k">pip</span> install -q pyomo
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyomo.environ</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pe</span>
-<span class="o">!</span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>-qq<span class="w"> </span>glpk-utils
+<span class="o">%</span><span class="k">pip</span> install -q glpk-utils
 <span class="n">glpk</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">SolverFactory</span><span class="p">(</span><span class="s1">&#39;glpk&#39;</span><span class="p">,</span> <span class="n">executable</span><span class="o">=</span><span class="s1">&#39;/usr/bin/glpsol&#39;</span><span class="p">)</span>
 <span class="c1"># Model</span>
 <span class="n">m</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">ConcreteModel</span><span class="p">()</span>
@@ -416,12 +520,19 @@ document.write(`
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;x1 =&#39;</span><span class="p">,</span><span class="n">m</span><span class="o">.</span><span class="n">x1</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;x2 =&#39;</span><span class="p">,</span><span class="n">m</span><span class="o">.</span><span class="n">x2</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Optimal value =&#39;</span><span class="p">,</span><span class="n">m</span><span class="o">.</span><span class="n">obj</span><span class="p">())</span>
+<span class="c1"># Explanation: This section demonstrates how to solve the optimization problem using Pyomo and GLPK.</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>E: Could not open lock file /var/lib/dpkg/lock-frontend - open (13: Permission denied)
-E: Unable to acquire the dpkg frontend lock (/var/lib/dpkg/lock-frontend), are you root?
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Note: you may need to restart the kernel to use updated packages.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Red">ERROR: Could not find a version that satisfies the requirement glpk-utils (from versions: none)</span>
+<span class=" -Color -Color-Red">ERROR: No matching distribution found for glpk-utils</span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Note: you may need to restart the kernel to use updated packages.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: Failed to create solver with name &#39;_glpk_shell&#39;: Failed to set
@@ -432,7 +543,7 @@ E: Unable to acquire the dpkg frontend lock (/var/lib/dpkg/lock-frontend), are y
 </div>
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">RuntimeError</span><span class="g g-Whitespace">                              </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">16</span>
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">line</span> <span class="mi">16</span>
 <span class="g g-Whitespace">     </span><span class="mi">14</span> <span class="n">m</span><span class="o">.</span><span class="n">con</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Constraint</span><span class="p">(</span><span class="n">expr</span> <span class="o">=</span> <span class="mi">3</span><span class="o">*</span><span class="n">m</span><span class="o">.</span><span class="n">x1</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">m</span><span class="o">.</span><span class="n">x2</span> <span class="o">&lt;=</span> <span class="mi">18</span><span class="p">)</span>
 <span class="g g-Whitespace">     </span><span class="mi">15</span> <span class="c1"># Solve problem using GLPK solver</span>
 <span class="ne">---&gt; </span><span class="mi">16</span> <span class="n">glpk</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">m</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
@@ -478,10 +589,11 @@ E: Unable to acquire the dpkg frontend lock (/var/lib/dpkg/lock-frontend), are y
 </section>
 <section id="gurobipy-link">
 <h2>GUROBIPY (<a class="reference external" href="https://pypi.org/project/gurobipy/">link</a>)<a class="headerlink" href="#gurobipy-link" title="Permalink to this heading">#</a></h2>
+<p>Gurobi is a powerful commercial solver known for its performance. It is widely used in industry for large-scale optimization problems.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Requirements</span>
-<span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>-q<span class="w"> </span>gurobipy
+<span class="o">%</span><span class="k">pip</span> install -q gurobipy
 <span class="kn">import</span><span class="w"> </span><span class="nn">gurobipy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gp</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">gurobipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">GRB</span>
 <span class="c1"># Model</span>
@@ -499,6 +611,7 @@ E: Unable to acquire the dpkg frontend lock (/var/lib/dpkg/lock-frontend), are y
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;x1 =&#39;</span><span class="p">,</span><span class="n">x1</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;x2 =&#39;</span><span class="p">,</span><span class="n">x2</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Optimal value =&#39;</span><span class="p">,</span><span class="n">m</span><span class="o">.</span><span class="n">ObjVal</span><span class="p">)</span>
+<span class="c1"># Explanation: This section demonstrates how to solve the optimization problem using Gurobi.</span>
 </pre></div>
 </div>
 </div>
@@ -560,6 +673,8 @@ E: Unable to acquire the dpkg frontend lock (/var/lib/dpkg/lock-frontend), are y
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pulp-link">PULP (link)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy-link">SCIPY (link)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyomo-glpk-link">PYOMO + GLPK (link)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gurobipy-link">GUROBIPY (link)</a></li>
 </ul>
