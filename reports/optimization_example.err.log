@@ -15,11 +15,6 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-# Requirements
-%pip install -q pyomo
-import pyomo.environ as pe
-%pip install -q glpk-utils
-glpk = pe.SolverFactory('glpk', executable='/usr/bin/glpsol')
 # Model
 m = pe.ConcreteModel()
 # Variables
@@ -38,28 +33,15 @@ print('Optimal value =',m.obj())
 # Explanation: This section demonstrates how to solve the optimization problem using Pyomo and GLPK.
 ------------------
 
------ stdout -----
-Note: you may need to restart the kernel to use updated packages.
------ stdout -----
-[31mERROR: Could not find a version that satisfies the requirement glpk-utils (from versions: none)[0m
-[31mERROR: No matching distribution found for glpk-utils[0m
------ stdout -----
-Note: you may need to restart the kernel to use updated packages.
------ stdout -----
-WARNING: Failed to create solver with name '_glpk_shell': Failed to set
-    executable for solver glpk. File with name=/usr/bin/glpsol either does not
-    exist or it is not executable. To skip this validation, call
-    set_executable with validate=False.
-------------------
 
 [0;31m---------------------------------------------------------------------------[0m
 [0;31mRuntimeError[0m                              Traceback (most recent call last)
-Cell [0;32mIn[3], line 16[0m
-[1;32m     14[0m m[38;5;241m.[39mcon [38;5;241m=[39m pe[38;5;241m.[39mConstraint(expr [38;5;241m=[39m [38;5;241m3[39m[38;5;241m*[39mm[38;5;241m.[39mx1 [38;5;241m+[39m [38;5;241m2[39m[38;5;241m*[39mm[38;5;241m.[39mx2 [38;5;241m<[39m[38;5;241m=[39m [38;5;241m18[39m)
-[1;32m     15[0m [38;5;66;03m# Solve problem using GLPK solver[39;00m
-[0;32m---> 16[0m [43mglpk[49m[38;5;241;43m.[39;49m[43msolve[49m[43m([49m[43mm[49m[43m)[49m[38;5;241m.[39mwrite()
-[1;32m     17[0m [38;5;66;03m# Print results[39;00m
-[1;32m     18[0m [38;5;28mprint[39m([38;5;124m'[39m[38;5;124mx1 =[39m[38;5;124m'[39m,m[38;5;241m.[39mx1[38;5;241m.[39mvalue)
+Cell [0;32mIn[4], line 11[0m
+[1;32m      9[0m m[38;5;241m.[39mcon [38;5;241m=[39m pe[38;5;241m.[39mConstraint(expr [38;5;241m=[39m [38;5;241m3[39m[38;5;241m*[39mm[38;5;241m.[39mx1 [38;5;241m+[39m [38;5;241m2[39m[38;5;241m*[39mm[38;5;241m.[39mx2 [38;5;241m<[39m[38;5;241m=[39m [38;5;241m18[39m)
+[1;32m     10[0m [38;5;66;03m# Solve problem using GLPK solver[39;00m
+[0;32m---> 11[0m [43mglpk[49m[38;5;241;43m.[39;49m[43msolve[49m[43m([49m[43mm[49m[43m)[49m[38;5;241m.[39mwrite()
+[1;32m     12[0m [38;5;66;03m# Print results[39;00m
+[1;32m     13[0m [38;5;28mprint[39m([38;5;124m'[39m[38;5;124mx1 =[39m[38;5;124m'[39m,m[38;5;241m.[39mx1[38;5;241m.[39mvalue)
 
 File [0;32m~/.local/lib/python3.8/site-packages/pyomo/opt/base/solvers.py:110[0m, in [0;36mUnknownSolver.solve[0;34m(self, *args, **kwds)[0m
 [1;32m    108[0m [38;5;28;01mdef[39;00m[38;5;250m [39m[38;5;21msolve[39m([38;5;28mself[39m, [38;5;241m*[39margs, [38;5;241m*[39m[38;5;241m*[39mkwds):
