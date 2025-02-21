@@ -8,3 +8,7 @@ chapters:
 - file: notebooks
 - file: markdown-notebooks
 - file: optimization_example
+- file: example_pulp
+- file: example_scipy
+- file: example_pyomo
+- file: example_gurobipy
